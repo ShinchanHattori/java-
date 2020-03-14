@@ -1,144 +1,149 @@
+package gamewindow;
 import java.util.Scanner;
-import java.util.*;
 import java.util.Random;
-import java.lang.*;
-import java.io.*;
+
 class WrongInputException extends RuntimeException
 {
 	WrongInputException()
 	{
-		System.out.println("Please Provide A Single Character Only...!");
+		System.out.println("Please Provide Single Character only");
 	}
 }
-class MenuInputException extends RuntimeException
+class MenuInputException extends WrongInputException
 {
 	MenuInputException()
 	{
-		System.out.println("Please Provide A Valid Input(1-3)");
+		System.out.println("Pleae provide a valid input(1-3)");
 	}
 }
 public class Hangman
 {
-	String word[]={"japan","qatar","syria","mongolia","bahrain","india"};
-	public void showMenu()
+	String word[]= {"japan","india","qatar","syria","mongolia","bahrain","australia"};
+	public void menu()
 	{
-		int op;
-		Scanner s=new Scanner(System.in);
-		System.out.println("-----Menu-----");
+		int opt;
+		Scanner sc=new Scanner(System.in);
+		System.out.println("-------HANGMAN------");
 		System.out.println("1.Play");
 		System.out.println("2.Instruction");
 		System.out.println("3.Exit");
-		System.out.println("Choose the option");
-		op=0;
+		System.out.println("\n Choose the option");
+		opt=0;
 		try
 		{
-			op=s.nextInt();
+			opt=sc.nextInt();
 		}
 		catch(RuntimeException e)
 		{
-			System.out.println("Please Provide A Valid Numeric Input");
-			showMenu();
+			System.out.println("Please Provide a Valid Numeric input");
+			menu();
 		}
-		switch(op)
+	switch(opt)
+	{
+	case 1:
+		playGame();
+		break;
+	case 2:
+		instructGame();
+		break;
+	case 3:
+		exitGame();
+		break;
+	default:
+		try
 		{
-			case 1:
-				playGame();
-				break;
-			case 2:
-				instructGame();
-				break;
-			case 3:
-				exitGame();
-				break;
-			default:
-				try
-				{
-					throw new MenuInputException();
-				}
-				catch(Exception e)
-				{
-					showMenu();
-				}
+			throw new MenuInputException();
 		}
-	}
-	void playGame()
-	{
-		int len,i,count=0,rnd,flag=0;		
-		String choice,temp;
-		Random r=new Random();
-		Scanner s=new Scanner(System.in);
-		rnd=r.nextInt(6);
-		len=word[rnd].length();
-		char[]newString=new char[len];
-		StringBuffer wrgString=new StringBuffer();
-		for(int j=0;j<len;j++)
+		catch(Exception e)
 		{
-			System.out.println("-");
+			menu();
 		}
-		System.out.println();
-		do
-		{
-			flag=0;
-			System.out.println("\n\nEnter Your Guess");
-			try
-			{
-				String ch=s.nextLine().toLowerCase();
-				if(ch.length()!=1)
-				{
-					throw new WrongInputException();
-				}
-				count++;
-				for(i=0;i<len;i++)
-				{
-					if(word[rnd].charAt(i)==ch.charAt(0))
-					{
-						newString[i]=word[rnd].charAt(i);
-						flag=1;
-					}
-				}
-				if(flag==0)
-				{
-					flag=1;
-					wrgString.append(ch+",");
-					System.out.println("\nMisses:"+wrgString);
-				}
-				System.out.println(newString);
-				temp=new String(newString);
-				if(word[rnd].equals(temp))
-				{
-					System.out.println("-----Congrats:)YOU WON-----");
-					System.out.println("Do U Want Play Again(Y/N)");
-					choice=s.nextLine();
-					if(choice.equalsIgnoreCase("Y"))
-					{
-						playGame();
-					}
-					else
-					{
-						showMenu();
-					}
-				}
-			}
-			catch(WrongInputException e)
-			{
-				//System.out.println(e);
-				flag=1;
-			}
-		}while(flag!=0);
-	}
-	void instructGame()
-	{
-		System.out.println("Instructing game method is invoked");
-	}
-	void exitGame()
-	{
-		System.exit(0);
-	}
-	public static void main(String args[])
-	{
-		Hangman h=new Hangman();
-		h.showMenu();
 	}
 }
-	
-	
+void playGame()
+{
+	System.out.println("Play method is invoked");
+	int i,len,cnt=0,rnd,flag=0;
+	String input,gu;
+	String choice,temp;
+	Random r=new Random();
+	Scanner s1=new Scanner(System.in);
+	rnd=r.nextInt(6);
+	len=word[rnd].length();
+	char[] newString =new char[len];
+	StringBuffer wrgString=new StringBuffer();
+	for(int j=0;j<len;j++)
+	{
+		System.out.println("-");
+	}
+	System.out.println();
+	do
+	{
+		flag=0;
+		System.out.println("Enter your guess");
+		String ch=s1.nextLine().toLowerCase();
+		try
+		{
+			if(ch.length()!=1)
+			{
+				throw new WrongInputException();
+			}
+		cnt++;
+		input=s1.nextLine();
+		for(i=0;i<len;i++)
+		{
+				if(word[rnd].charAt(i)==ch.charAt(0))
+				{
+					newString[i]=word[rnd].charAt(i);	
+					flag=1;
+				}
+		}
+		if(flag==0)
+		{
+			flag=1;
+			wrgString.append(ch+" ");
+			System.out.println("\n Misses:"+wrgString);
+		}
+		System.out.println("newString");
+		temp= new String(newString);
+		if(word[rnd].equals(temp));
+		{
+			System.out.println("--------Congrats you WIN :)-------------");
+			System.out.println("do you want play again(y/n)");
+			choice=s1.nextLine();
+			if(choice.equalsIgnoreCase("y"))
+			{
+				playGame();
+			}
+			else
+			{
+				menu();
+			}
+		}
+	}
+	catch(WrongInputException e)
+	{
+		System.out.println(e);
+		flag=1;
+	}
+	}while(flag!=0);
+}
+void instructGame()
+{
+	System.out.println("Instruct method is invoked");
+}
+void exitGame()
+{
+	System.out.println("Exit method is invoked");
+}
+public static void main(String[] args) 
+{
+	Hangman h=new Hangman();
+	h.menu();
+	Menu mobj=new Menu();
+	mobj.addComponent();
+	GameWindow gobj=new GameWindow();
+	gobj.addComponent();
+}
+
+}
